@@ -1,0 +1,149 @@
+Question:  Write a Python script using selenium that goes to google.com, searches for the keyword "Internshala" and outputs a CSV containing all the search results including URL, description, and other details.
+
+Python file: {
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "94b1507e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# pip install selenium"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "d390f430",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import necessary packages\n",
+    "\n",
+    "from selenium import webdriver\n",
+    "from selenium.webdriver.support.ui import Select\n",
+    "from selenium.webdriver.support.ui import WebDriverWait\n",
+    "import time\n",
+    "import pandas as pd\n",
+    "from selenium.webdriver.support.ui import Select\n",
+    "from selenium.common.exceptions import NoSuchElementException\n",
+    "from selenium.webdriver.common.keys import Keys\n",
+    "from selenium.webdriver.common.by import By\n",
+    "import csv\n",
+    "\n",
+    "\n",
+    "# Initialise Chrome WebDriver and open Google homepage\n",
+    "\n",
+    "driver = webdriver.Chrome(executable_path='Desktop/data_centre/python_projects/chromedriver.exe') \n",
+    "driver.get('https://www.google.com/')\n",
+    "\n",
+    "\n",
+    "# Locate the search box by its name and search for 'Internshala'\n",
+    "\n",
+    "search_box = driver.find_element(By.NAME, \"q\")\n",
+    "search_box.send_keys(\"Internshala\")\n",
+    "search_box.submit()\n",
+    "\n",
+    "\n",
+    "# Implicitly wait for 10 seconds and maximise the browser window\n",
+    "\n",
+    "driver.implicitly_wait(10)\n",
+    "driver.maximize_window()\n",
+    "\n",
+    "\n",
+    "# Initialise an empty list to store scraped data\n",
+    "\n",
+    "results = []\n",
+    "\n",
+    "\n",
+    "# Find result using CSS selector 'div.g' on the search results page\n",
+    "\n",
+    "result_divs = driver.find_elements(By.CSS_SELECTOR, \"div.g\")\n",
+    "\n",
+    "# Loop through each result div\n",
+    "\n",
+    "for result_div in result_divs:\n",
+    "    #Create a dictionary to store result information\n",
+    "    result = {}\n",
+    "    \n",
+    "    # Extract link, title, and description from the result div\n",
+    "    anchor = result_div.find_elements(By.CSS_SELECTOR, \"a\")\n",
+    "    link = anchor[0].get_attribute(\"href\")\n",
+    "    title = result_div.find_element(By.CSS_SELECTOR, \"h3\").text\n",
+    "    description_element = result_div.find_element(By.XPATH, \"//div[@data-sncf='2']\")\n",
+    "    description = description_element.text if description_element else \"-\"\n",
+    "    \n",
+    "    # Append formatted result to the list\n",
+    "    results.append(str(title)+\";\"+str(link)+';'+str(description))\n",
+    "    \n",
+    "\n",
+    "#Quit the WebDriver    \n",
+    "driver.quit()\n",
+    "\n",
+    "\n",
+    "#Write the results to a CSV file named 'internshala_results.csv'\n",
+    "\n",
+    "with open(\"internshala_results.csv\", \"w\") as f:\n",
+    "    f.write(\"Title; Link; Description\\n\")\n",
+    "    \n",
+    "# Open the CSV file and write the header row\n",
+    "\n",
+    "for result in results:\n",
+    "    with open(\"internshala_results.csv\", \"a\", encoding=\"utf-8\") as f:\n",
+    "        f.write(str(result)+\"\\n\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c71b9d13",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "022f99af",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+
+CSV: Title; Link; Description
+Internshala;https://internshala.com/;
+Internshala;https://internshala.com/;
+;https://internshala.com/careers/trainings_content_development#:~:text=Internshala's%20mission%20is%20to%20equip,is%20central%20to%20this%20mission.;
+;https://internshala.com/internships/internship-at-go-study-free/#:~:text=Internshala%20is%20a%20free%20platform,apply%20for%20jobs%20on%20Internshala.;
+Internshala;https://in.linkedin.com/company/internshala;
+Internshala Internships & Jobs - Apps on Google Play;https://play.google.com/store/apps/details?id=com.internshala.app&hl=en&gl=US;
+Internshala (@internshala) • Instagram photos and videos;https://www.instagram.com/internshala/?hl=en;
+49 Internshala jobs in India (8 new);https://in.linkedin.com/jobs/internshala-jobs;
+Internshala;https://www.youtube.com/channel/UC97qxGRmPsyfV0Miz7AxU2A;
+Internshala;https://en.wikipedia.org/wiki/Internshala;
+Latest News, Photos, Videos on Internshala;https://www.ndtv.com/topic/internshala;
+Description;https://www.google.com/search?q=Internshala&sca_esv=586895506&source=hp&ei=FpdpZYzUFN66i-gP8ZOCyAU&iflsig=AO6bgOgAAAAAZWmlJnSAc4Z4Jc16zW9cCEHsVwJPMHUd#;
